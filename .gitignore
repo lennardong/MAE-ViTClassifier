@@ -161,7 +161,12 @@ cython_debug/
 
 # Large Model Files
 data/
+
 # pyTorch Models
 *.bin
 *.pth
 *.pt
+
+# Old
+z_old/
+archive/
