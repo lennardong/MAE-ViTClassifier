@@ -140,7 +140,7 @@ def run_model(TRAINING_FOLDER_, TEST_FOLDER_, OUTPUT_FOLDER_, WBC_LABEL: str = '
         per_device_train_batch_size=64 // num_gpus if num_gpus > 0 else 16,  # Adjust batch size
         evaluation_strategy="epoch",  # instead of 'steps'
         save_strategy="epoch",
-        num_train_epochs=5,
+        num_train_epochs=10,
         logging_steps=50,
         learning_rate=2e-4,
         save_total_limit=2,
@@ -184,7 +184,6 @@ def run_model(TRAINING_FOLDER_, TEST_FOLDER_, OUTPUT_FOLDER_, WBC_LABEL: str = '
         eval_dataset=prepared_val_ds,
     )
     training_results = trainer.train()
-
 
     print("SAVE SESSION")
     utils.save_session(OUTPUT_FOLDER_, trainer, model, MODEL_CONFIG, TRAINING_ARGS)

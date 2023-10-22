@@ -83,7 +83,6 @@ def visualize(pixel_values_, model_):
     show_image(y[0], "reconstruction")
 
     plt.show()
-     
 
 # Visualize
 # -------------------

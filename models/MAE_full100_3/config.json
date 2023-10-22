@@ -25,7 +25,3 @@
   "torch_dtype": "float32",
   "transformers_version": "4.35.0.dev0"
 }
-
-5e-5 -> 0.00005
-1.5e-4 -> 0.00015
-0.000075 -> 7.5e-5
