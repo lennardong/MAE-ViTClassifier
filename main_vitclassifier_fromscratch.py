@@ -140,8 +140,8 @@ def run_model(TRAINING_FOLDER_, TEST_FOLDER_, OUTPUT_FOLDER_, WBC_LABEL: str = '
         per_device_train_batch_size=64 // num_gpus if num_gpus > 0 else 16,  # Adjust batch size
         evaluation_strategy="epoch",  # instead of 'steps'
         save_strategy="epoch",
-        num_train_epochs=10,
-        logging_steps=50,
+        num_train_epochs=20,
+        logging_steps=10,
         learning_rate=2e-4,
         save_total_limit=2,
         remove_unused_columns=False,
@@ -189,10 +189,10 @@ def run_model(TRAINING_FOLDER_, TEST_FOLDER_, OUTPUT_FOLDER_, WBC_LABEL: str = '
     utils.save_session(OUTPUT_FOLDER_, trainer, model, MODEL_CONFIG, TRAINING_ARGS)
 
     # EVALUATE
-    # print("EVALUATE RESULTS")
-    # test_results = trainer.predict(prepared_test_ds)
-    # print(utils.compute_metrics(test_results))
-    # utils.plot_losses_train_eval(trainer, f"{WBC_LABEL}\nLoss Landscape, from scratch", OUTPUT_FOLDER_)
+    print("EVALUATE RESULTS")
+    test_results = trainer.predict(prepared_test_ds)
+    print(utils.compute_metrics(test_results))
+    utils.plot_losses_train_eval(trainer, f"{WBC_LABEL}\nLoss Landscape, from scratch", OUTPUT_FOLDER_)
 
 
 # ------------------
@@ -215,5 +215,6 @@ if __name__ == '__main__':
     WBC50 = Folder(dataset_label="WBC50", training_folder='./data/WBC_50/train/data/', output_folder='./models/fromScratch_WBC_50')
     WBC100 = Folder(dataset_label="WBC100", training_folder='./data/WBC_100/train/data/', output_folder='./models/fromScratch_WBC_100')
 
-    for item in [WBC1, WBC10, WBC50, WBC100]:
+    # for item in [WBC1, WBC10, WBC50, WBC100]:
+    for item in [WBC1]: # this is for debugging
         run_model(item.training_folder, item.test_folder, item.output_folder, item.dataset_label)

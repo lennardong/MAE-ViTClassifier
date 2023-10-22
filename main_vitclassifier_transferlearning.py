@@ -80,11 +80,11 @@ def run_model(PRETRAINED_MODEL_FOLDER_, TRAINING_FOLDER_, TEST_FOLDER_, OUTPUT_F
         per_device_train_batch_size=64 // num_gpus if num_gpus > 0 else 16,  # Adjust batch size
         evaluation_strategy="epoch",  # instead of 'steps'
         save_strategy="epoch",
-        num_train_epochs=5,
-        fp16=use_fp16,
+        num_train_epochs=20,
+        # fp16=use_fp16,
         #   save_steps=100, # set very high to avoid saving
         #   eval_steps=100, # ignored because eval set to epoch
-        logging_steps=5,
+        logging_steps=10,
         learning_rate=2e-4,
         save_total_limit=2,
         remove_unused_columns=False,
@@ -147,8 +147,8 @@ if __name__ == '__main__':
     WBC1 = Folder(dataset_label="WBC1", training_folder='./data/WBC_1/train/data/', output_folder='./models/transfer_WBC_1')
     WBC10 = Folder(dataset_label="WBC10", training_folder='./data/WBC_10/train/data/', output_folder='./models/transfer_WBC_10')
     WBC50 = Folder(dataset_label="WBC50", training_folder='./data/WBC_50/train/data/', output_folder='./models/transfer_WBC_50')
-    WBC100 = Folder(dataset_label="WBC100", training_folder='./data/WBC_100/train/data/', output_folder='./models/transfer_WBC_1')
+    WBC100 = Folder(dataset_label="WBC100", training_folder='./data/WBC_100/train/data/', output_folder='./models/transfer_WBC_100')
 
-    # for item in [WBC1, WBC10, WBC50, WBC100]:
-    for item in [WBC1]:
+    for item in [WBC1, WBC10, WBC50, WBC100]:
+    # for item in [WBC1]:
         run_model(item.pretrained_model_folder, item.training_folder, item.test_folder, item.output_folder, item.dataset_label)
