@@ -217,79 +217,79 @@ def save_session(save_path: str,
 # EVALUATION HELPERS
 ########################################################################################
 
-# Load Models for Eval
-# -----------------
-import os
-from main_vitclassifier_fromscratch import ViTForImageClassificationFromScratch
-from main_vitclassifier_transferlearning import ViTForImageClassificationFromMAE
-from datasets import Dataset
-
-
-def load_model_fromscratch(directory_path: str, filename_model_args: str, filename_model_state: str) -> ViTForImageClassificationFromScratch:
-    """Returns the model"""
-
-    file_model_args = os.path.join(directory_path, filename_model_args)
-    file_state_dict = os.path.join(directory_path, filename_model_state)
-
-    with open(file_model_args, 'r') as f:
-        loaded_args = json.load(f)
-    config = ViTConfig.from_dict(loaded_args)
-    model = ViTForImageClassificationFromScratch(config)  # Initialize the model
-    model.load_state_dict(torch.load(file_state_dict, map_location=torch.device('cpu')))
-
-    # Make sure to call this if you plan to use the model for inference
-    model.eval()
-
-    return model
-
-
-def load_trainer(directory_path: str, filename: str, model) -> Trainer:
-    """Returns the trainer to run inference"""
-    file = os.path.join(directory_path, filename)
-    with open(file, 'r') as f:
-        loaded_args = json.load(f)
-
-    config = TrainingArguments(**loaded_args)
-    trainer = Trainer(
-        model=model,
-        args=config,
-        data_collator=collate_fn_classifier,
-        compute_metrics=compute_metrics,
-    )
-
-    return trainer
-
-
-def load_training_logs(directory_path: str, filename: str) -> dict:
-    """Returns the training logs for eval.
-
-    Schema: [dict_eval_loss, dict_loss, dict_eval_loss, dict_loss, ...]
-
-    eval loss keys:
-    ['eval_loss', 'eval_accuracy', 'eval_runtime', 'eval_samples_per_second', 'eval_steps_per_second', 'epoch', 'step']
-
-    loss keys:
-    ['loss', 'learning_rate', 'epoch', 'step']
-    """
-    file = os.path.join(directory_path, filename)
-    with open(file, 'r') as f:
-        loaded_args = json.load(f)
-
-    return loaded_args
-
-
-def load_test_ds(directory_path: str, filename: str, test_path: str) -> (ViTImageProcessor, Dataset):
-    """Returns the test set df"""
-    file = os.path.join(directory_path, filename)
-    with open(file, 'r') as f:
-        loaded_args = json.load(f)
-
-    processor_ = ViTImageProcessor(**loaded_args)
-    file_test = os.path.join(directory_path, filename)
-    ds_raw = load_and_split_dataset(test_path, 0.0)
-    ds_transformed = ds_raw.with_transform(lambda example_batch: transform(processor_, example_batch))
-
-    return processor_, ds_transformed
+# # Load Models for Eval
+# # -----------------
+# import os
+# from main_vitclassifier_fromscratch import ViTForImageClassificationFromScratch
+# from main_vitclassifier_transferlearning import ViTForImageClassificationFromMAE
+# from datasets import Dataset
+#
+#
+# def load_model_fromscratch(directory_path: str, filename_model_args: str, filename_model_state: str) -> ViTForImageClassificationFromScratch:
+#     """Returns the model"""
+#
+#     file_model_args = os.path.join(directory_path, filename_model_args)
+#     file_state_dict = os.path.join(directory_path, filename_model_state)
+#
+#     with open(file_model_args, 'r') as f:
+#         loaded_args = json.load(f)
+#     config = ViTConfig.from_dict(loaded_args)
+#     model = ViTForImageClassificationFromScratch(config)  # Initialize the model
+#     model.load_state_dict(torch.load(file_state_dict, map_location=torch.device('cpu')))
+#
+#     # Make sure to call this if you plan to use the model for inference
+#     model.eval()
+#
+#     return model
+#
+#
+# def load_trainer(directory_path: str, filename: str, model) -> Trainer:
+#     """Returns the trainer to run inference"""
+#     file = os.path.join(directory_path, filename)
+#     with open(file, 'r') as f:
+#         loaded_args = json.load(f)
+#
+#     config = TrainingArguments(**loaded_args)
+#     trainer = Trainer(
+#         model=model,
+#         args=config,
+#         data_collator=collate_fn_classifier,
+#         compute_metrics=compute_metrics,
+#     )
+#
+#     return trainer
+#
+#
+# def load_training_logs(directory_path: str, filename: str) -> dict:
+#     """Returns the training logs for eval.
+#
+#     Schema: [dict_eval_loss, dict_loss, dict_eval_loss, dict_loss, ...]
+#
+#     eval loss keys:
+#     ['eval_loss', 'eval_accuracy', 'eval_runtime', 'eval_samples_per_second', 'eval_steps_per_second', 'epoch', 'step']
+#
+#     loss keys:
+#     ['loss', 'learning_rate', 'epoch', 'step']
+#     """
+#     file = os.path.join(directory_path, filename)
+#     with open(file, 'r') as f:
+#         loaded_args = json.load(f)
+#
+#     return loaded_args
+#
+#
+# def load_test_ds(directory_path: str, filename: str, test_path: str) -> (ViTImageProcessor, Dataset):
+#     """Returns the test set df"""
+#     file = os.path.join(directory_path, filename)
+#     with open(file, 'r') as f:
+#         loaded_args = json.load(f)
+#
+#     processor_ = ViTImageProcessor(**loaded_args)
+#     file_test = os.path.join(directory_path, filename)
+#     ds_raw = load_and_split_dataset(test_path, 0.0)
+#     ds_transformed = ds_raw.with_transform(lambda example_batch: transform(processor_, example_batch))
+#
+#     return processor_, ds_transformed
 
 
 # Viz
