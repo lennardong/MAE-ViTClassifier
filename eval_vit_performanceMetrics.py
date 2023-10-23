@@ -106,8 +106,8 @@ def generate_statistics(df_pred_):
     models = df_pred_['model'].unique()
 
     # For each unique model, calculate the metrics
-    for model in models:
-        df_model = df_pred_[df_pred_['model'] == model]
+    for model_ in models:
+        df_model = df_pred_[df_pred_['model'] == model_]
 
         accuracy = accuracy_score(df_model['actual_label'], df_model['predicted_label'])
         report = classification_report(df_model['actual_label'], df_model['predicted_label'], output_dict=True,
@@ -118,7 +118,7 @@ def generate_statistics(df_pred_):
         recall = report['macro avg']['recall']
         f1 = report['macro avg']['f1-score']
 
-        model_metrics.append([model, accuracy, precision, recall, f1])
+        model_metrics.append([model_, accuracy, precision, recall, f1])
 
     # Convert list to DataFrame
     df_eval = pd.DataFrame(model_metrics, columns=['model', 'accuracy', 'precision', 'recall', 'f1'])
@@ -206,62 +206,62 @@ processor = ViTImageProcessor(loaded_config)
 # l, p = predict(IMG_PATH)
 #
 # print(f'{l}: {p}')
-
-def build_df_pred_v1(img_folder: str, processor, model, model_tag: str, actual_label_dict: dict):
-    """
-    Builds a DataFrame with prediction and actual label information for multiple images.
-
-    Parameters:
-    - img_folder: str, path to the folder containing images
-    - processor: ViTImageProcessor, image processor object
-    - model: PyTorch model for prediction
-    - model_tag: str, tag for the model
-    - actual_label_dict: dict, a dictionary mapping image filenames to their actual labels
-
-    Returns:
-    - df_pred: DataFrame, contains prediction and label information
-    """
-    # Initialize an empty DataFrame
-    df_pred_ = pd.DataFrame(columns=['model', 'input', 'predicted_label', 'predicted_val', 'actual_label', 'is_correct'])
-
-    # Iterate through each image in the folder
-    for img_name in os.listdir(img_folder):
-        img_path = os.path.join(img_folder, img_name)
-
-        # Skip if not an image file
-        if not img_path.lower().endswith(('.png', '.jpg', '.jpeg')):
-            continue
-
-        # Encode the image
-        im = Image.open(img_path)
-        encoding = processor(images=im, return_tensors="pt")
-        encoding.keys()
-        pixel_values = encoding['pixel_values']
-
-        # Generate Softmax results
-        outputs = model(pixel_values)
-        results = outputs.logits.softmax(dim=1)
-
-        # Process the results
-        result_idx = results.argmax(1).tolist()[0]
-        predicted_label = actual_label_dict[result_idx]
-        predicted_val = results.tolist()[0][result_idx]
-
-        # Retrieve the actual label from the dictionary
-        actual_label = actual_label_dict.get(img_name, "Unknown")
-
-        # Check if the prediction is correct
-        is_correct = (predicted_label == actual_label)
-
-        # Append to DataFrame
-        new_row = {
-            'model': model_tag,
-            'input': img_name,
-            'predicted_label': predicted_label,
-            'predicted_val': predicted_val,
-            'actual_label': actual_label,
-            'is_correct': is_correct
-        }
-        df_pred_ = df_pred_.append(new_row, ignore_index=True)
-
-    return df_pred_
+#
+# def build_df_pred_v1(img_folder: str, processor, model, model_tag: str, actual_label_dict: dict):
+#     """
+#     Builds a DataFrame with prediction and actual label information for multiple images.
+#
+#     Parameters:
+#     - img_folder: str, path to the folder containing images
+#     - processor: ViTImageProcessor, image processor object
+#     - model: PyTorch model for prediction
+#     - model_tag: str, tag for the model
+#     - actual_label_dict: dict, a dictionary mapping image filenames to their actual labels
+#
+#     Returns:
+#     - df_pred: DataFrame, contains prediction and label information
+#     """
+#     # Initialize an empty DataFrame
+#     df_pred_ = pd.DataFrame(columns=['model', 'input', 'predicted_label', 'predicted_val', 'actual_label', 'is_correct'])
+#
+#     # Iterate through each image in the folder
+#     for img_name in os.listdir(img_folder):
+#         img_path = os.path.join(img_folder, img_name)
+#
+#         # Skip if not an image file
+#         if not img_path.lower().endswith(('.png', '.jpg', '.jpeg')):
+#             continue
+#
+#         # Encode the image
+#         im = Image.open(img_path)
+#         encoding = processor(images=im, return_tensors="pt")
+#         encoding.keys()
+#         pixel_values = encoding['pixel_values']
+#
+#         # Generate Softmax results
+#         outputs = model(pixel_values)
+#         results = outputs.logits.softmax(dim=1)
+#
+#         # Process the results
+#         result_idx = results.argmax(1).tolist()[0]
+#         predicted_label = actual_label_dict[result_idx]
+#         predicted_val = results.tolist()[0][result_idx]
+#
+#         # Retrieve the actual label from the dictionary
+#         actual_label = actual_label_dict.get(img_name, "Unknown")
+#
+#         # Check if the prediction is correct
+#         is_correct = (predicted_label == actual_label)
+#
+#         # Append to DataFrame
+#         new_row = {
+#             'model': model_tag,
+#             'input': img_name,
+#             'predicted_label': predicted_label,
+#             'predicted_val': predicted_val,
+#             'actual_label': actual_label,
+#             'is_correct': is_correct
+#         }
+#         df_pred_ = df_pred_.append(new_row, ignore_index=True)
+#
+#     return df_pred_
