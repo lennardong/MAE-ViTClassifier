@@ -3,6 +3,7 @@ From-scratch training of a VIT Classifier for White-Blood Cell Classification
 - ViT Architecture based on BASE ViT Model Architecture
 - Pre-trained model is a ViTMAE model, trained on the related medical dataset
 """
+
 # Internal Helpers
 import util.utils as utils
 import json

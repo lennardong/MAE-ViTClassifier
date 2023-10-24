@@ -1,16 +1,13 @@
+"""
+This script plots the training curves for MAE training
+
+"""
 # Utilities
 import os
-from dataclasses import dataclass
 import json
 
 # Viz + Analytics
 import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-import numpy as np
-
-# Helper functions
-import util.utils as utils
 
 
 ########################################

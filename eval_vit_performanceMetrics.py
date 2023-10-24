@@ -1,3 +1,8 @@
+"""
+This script evaluates the performance of the ViT models against the test set.
+It then saves them as  CSVs in the model folders.
+
+"""
 ########################################################
 # Load Model
 ########################################################
@@ -166,102 +171,3 @@ if __name__ == '__main__':
 
         # Get model metrics
         print(df_eval)
-
-#################
-# OLD
-'''
-# LOAD MODEL
-
-# Load the model config from a JSON file
-with open(ARTEFACT_LOCATION + '/model_config.json', 'r') as f:
-    loaded_config_dict = json.load(f)
-
-loaded_config = ViTConfig.from_dict(loaded_config_dict)
-
-model = ViTForImageClassificationFromScratch(loaded_config)  # Initialize the model
-model.load_state_dict(torch.load(ARTEFACT_LOCATION + '/model_state_dict.pth', map_location=torch.device('cpu')))
-model.eval()  # freeze model for inference
-processor = ViTImageProcessor(loaded_config)
-'''
-# def predict(path: str):
-#     # Encode
-#     im = Image.open(path)
-#
-#     encoding = processor(images=im, return_tensors="pt")
-#     encoding.keys()
-#     pixel_values = encoding['pixel_values']
-#
-#     # Softmax results
-#     outputs = model(pixel_values)
-#     results = outputs.logits.softmax(1)
-#
-#     # Process
-#     result_idx = results.argmax(1).tolist()[0]
-#     result_label = ID2LABEL[result_idx]
-#     result_p = results.tolist()[0][result_idx]
-#
-#     return result_label, result_p
-#
-#
-# l, p = predict(IMG_PATH)
-#
-# print(f'{l}: {p}')
-#
-# def build_df_pred_v1(img_folder: str, processor, model, model_tag: str, actual_label_dict: dict):
-#     """
-#     Builds a DataFrame with prediction and actual label information for multiple images.
-#
-#     Parameters:
-#     - img_folder: str, path to the folder containing images
-#     - processor: ViTImageProcessor, image processor object
-#     - model: PyTorch model for prediction
-#     - model_tag: str, tag for the model
-#     - actual_label_dict: dict, a dictionary mapping image filenames to their actual labels
-#
-#     Returns:
-#     - df_pred: DataFrame, contains prediction and label information
-#     """
-#     # Initialize an empty DataFrame
-#     df_pred_ = pd.DataFrame(columns=['model', 'input', 'predicted_label', 'predicted_val', 'actual_label', 'is_correct'])
-#
-#     # Iterate through each image in the folder
-#     for img_name in os.listdir(img_folder):
-#         img_path = os.path.join(img_folder, img_name)
-#
-#         # Skip if not an image file
-#         if not img_path.lower().endswith(('.png', '.jpg', '.jpeg')):
-#             continue
-#
-#         # Encode the image
-#         im = Image.open(img_path)
-#         encoding = processor(images=im, return_tensors="pt")
-#         encoding.keys()
-#         pixel_values = encoding['pixel_values']
-#
-#         # Generate Softmax results
-#         outputs = model(pixel_values)
-#         results = outputs.logits.softmax(dim=1)
-#
-#         # Process the results
-#         result_idx = results.argmax(1).tolist()[0]
-#         predicted_label = actual_label_dict[result_idx]
-#         predicted_val = results.tolist()[0][result_idx]
-#
-#         # Retrieve the actual label from the dictionary
-#         actual_label = actual_label_dict.get(img_name, "Unknown")
-#
-#         # Check if the prediction is correct
-#         is_correct = (predicted_label == actual_label)
-#
-#         # Append to DataFrame
-#         new_row = {
-#             'model': model_tag,
-#             'input': img_name,
-#             'predicted_label': predicted_label,
-#             'predicted_val': predicted_val,
-#             'actual_label': actual_label,
-#             'is_correct': is_correct
-#         }
-#         df_pred_ = df_pred_.append(new_row, ignore_index=True)
-#
-#     return df_pred_

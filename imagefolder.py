@@ -1,3 +1,8 @@
+"""
+Backup sript to run if main_mae_pretrain.py does not work
+source: HF
+"""
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional

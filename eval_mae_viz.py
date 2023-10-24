@@ -1,4 +1,7 @@
+"""
+This script is for visualizing reconstructed images from the MAE model
 
+"""
 ########################
 # Initialize
 ########################
@@ -17,8 +20,8 @@ model = ViTMAEForPreTraining.from_pretrained(MODEL_PATH)
 # The pixel_values output of the ViTFeatureExtractor is the sequence of embedded patches. 
 # It is a PyTorch tensor of shape [batch_size(1), Channels (3), Height(224), Width (224)]
 # IMG_PATH = 'data/pRCC_nolabel/3610_6089_2000.jpg'
-# IMG_PATH = 'data/CAM16_100cls_10mask/train/data/normal/normal_002-500-2-384ver.jpg' # CAM16
-IMG_PATH = 'data/WBC_1/train/data/Basophil/20190527_111443_0.jpg' # WBC
+IMG_PATH = 'data/CAM16_100cls_10mask/train/data/normal/normal_002-500-2-384ver.jpg' # CAM16
+# IMG_PATH = 'data/WBC_1/train/data/Basophil/20190527_111443_0.jpg' # WBC
 
 feature_extractor = ViTFeatureExtractor.from_pretrained(MODEL_PATH)
 image = Image.open(IMG_PATH)

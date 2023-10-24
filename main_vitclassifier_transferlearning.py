@@ -150,5 +150,4 @@ if __name__ == '__main__':
     WBC100 = Folder(dataset_label="WBC100", training_folder='./data/WBC_100/train/data/', output_folder='./models/transfer_WBC_100')
 
     for item in [WBC1, WBC10, WBC50, WBC100]:
-    # for item in [WBC1]:
         run_model(item.pretrained_model_folder, item.training_folder, item.test_folder, item.output_folder, item.dataset_label)
